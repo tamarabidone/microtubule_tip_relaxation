@@ -1,0 +1,46 @@
+# VARIABLES
+variable fname index microtubule_gdp_tab.txt
+variable xyzname index microtubule_gdp.xyz
+variable simname index gdp
+
+print "Seed 1: ${seed1}"
+print "Seed 2: ${seed2}"
+print "Seed 3: ${seed3}"
+
+# Initialization
+units		real
+boundary	f f f
+atom_style	molecular
+log 		log.${simname}.txt
+
+pair_style none
+bond_style      table linear 1500
+angle_style     table linear 1000
+dihedral_style	table/cut linear 1000
+read_data	${fname}
+
+neigh_modify	every 100 check yes
+comm_modify cutoff 200.0
+
+timestep 100
+
+group 1 type 1
+group 2 type 2
+group 3 type 3
+group 4 type 1 2
+
+fix 1 1 brownian 300.0 ${seed1} gamma_t 234.6 rng gaussian
+fix 2 2 brownian 300.0 ${seed2} gamma_t 195.6 rng gaussian
+fix 3 3 brownian 300.0 ${seed3} gamma_t 1000000000.0 rng gaussian
+
+region 1 cylinder z 245.7 247.1 100.0 -1000.0 1000.0 side out
+fix 4 4 wall/region 1 harmonic 15.0 15.0 15.0
+
+dump 1 all xyz 1000 ${xyzname}
+
+thermo_style custom step pe ebond eangle edihed evdwl elong
+thermo 100000
+
+run       20000000
+
+print "All done"
