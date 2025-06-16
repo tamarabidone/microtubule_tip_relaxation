@@ -1,0 +1,49 @@
+# VARIABLES
+variable fname index microtubule_gdp_anal.txt
+variable xyzname index microtubule_gdp_anal_4.xyz
+variable resname index microtubule_gdp_anal_4.rst
+variable simname index gdp_anal_4
+
+print "Seed 1: ${seed1}"
+print "Seed 2: ${seed2}"
+print "Seed 3: ${seed3}"
+
+# Initialization
+units		real
+boundary	f f f
+atom_style	molecular
+log 		log.${simname}.txt
+
+pair_style none
+bond_style      hybrid harmonic morse
+angle_style     harmonic
+dihedral_style	hybrid harmonic quadratic
+read_data	${fname}
+
+neigh_modify	every 100 check yes
+comm_modify cutoff 800.0
+
+timestep 100
+
+group 1 type 1
+group 2 type 2
+group 3 type 3
+group 4 type 1 2
+
+fix 1 1 brownian 300.0 ${seed1} gamma_t 195.5
+fix 2 2 brownian 300.0 ${seed2} gamma_t 163.0
+fix 3 3 brownian 300.0 ${seed3} gamma_t 1000000000.0
+
+region 1 cylinder z 245.7 247.1 90.0 -1000.0 1000.0 side out
+fix 4 4 wall/region 1 harmonic 15.0 10.0 10.0
+
+dump 1 all xyz 1000 ${xyzname}
+
+thermo_style custom step pe ebond eangle edihed evdwl elong
+thermo 100000
+
+restart 10000000 ${resname}
+
+run       400000000
+
+print "All done"
