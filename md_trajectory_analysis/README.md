@@ -2,7 +2,7 @@
 
 ![Naming scheme](./naming_scheme.png)
 
-All-atom molecular dynamics trajectories mapped to coarse-grained monomer-resolution representation are stored at google drive and can be accessed via links in `gdp-mt.url` and `gtp-mt.url`. The order of beads is as ollws:
+All-atom molecular dynamics trajectories mapped to coarse-grained monomer-resolution representation are stored at google drive and can be accessed via links in `gdp-mt.url` and `gtp-mt.url`. The order of beads is as follows:
 A01, A02, A03, A04,
 B01, B02, B03, B04,
 C01, C02, C03, C04,
@@ -58,4 +58,6 @@ N05, N06, N07, N08,
 M09, M10, M11, M12,
 N09, N10, N11, N12,
 M13, M14, M15, M16,
-N13, N14, N15, N16
+N13, N14, N15, N16.
+
+Total simulation time is 4 μs and a timestep is 0.1 ns. 
